@@ -25,6 +25,7 @@ This page lists all the individual contributions to the project by their author.
   - Fix position and layer of info tip and reveal production cameo on selected building
   - Fix a glitch related to incorrect target setting for missiles
   - Ability to disable shadow for debris & meteor animations
+  - Ability to disable shadow for debris & meteor animations
 - **Kerbiter (Metadorius)**:
   - Building upgrades enhancement
   - Extended tooltips

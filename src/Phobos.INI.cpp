@@ -86,8 +86,8 @@ DEFINE_HOOK(0x5FACDF, OptionsClass_LoadSettings_LoadPhobosSettings, 0x5)
 	const auto phobosSection = "Phobos";
 
 	Phobos::Config::ToolTipDescriptions = CCINIClass::INI_RA2MD.ReadBool(phobosSection, "ToolTipDescriptions", true);
-	Phobos::Config::ToolTipBlur = CCINIClass::INI_RA2MD.ReadBool(phobosSection, "ToolTip2Blur", false);
-	Phobos::Config::PrioritySelectionFiltering = CCINIClass::INI_RA2MD.ReadBool(phobosSection, "PrioritySelection2Filtering", true);
+	Phobos::Config::ToolTipBlur = CCINIClass::INI_RA2MD.ReadBool(phobosSection, "ToolTipBlur", false);
+	Phobos::Config::PrioritySelectionFiltering = CCINIClass::INI_RA2MD.ReadBool(phobosSection, "PrioritySelectionFiltering", true);
 	Phobos::Config::ShowPlacementPreview = CCINIClass::INI_RA2MD.ReadBool(phobosSection, "ShowPlacementPreview", true);
 	Phobos::Config::MessageApplyHoverState = CCINIClass::INI_RA2MD.ReadBool(phobosSection, "MessageApplyHoverState", false);
 	Phobos::Config::MessageDisplayInCenter = CCINIClass::INI_RA2MD.ReadBool(phobosSection, "MessageDisplayInCenter", false);

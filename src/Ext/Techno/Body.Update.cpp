@@ -37,6 +37,7 @@ void TechnoExt::ExtData::OnEarlyUpdate()
 	this->UpdateRecountBurst();
 	this->UpdateRearmInEMPState();
 	this->UpdateLastTargetCrd();
+	this->TransferPassengersToSpawn();
 
 	if (this->AttackMoveFollowerTempCount)
 		this->AttackMoveFollowerTempCount--;
@@ -2260,5 +2261,78 @@ void TechnoExt::ExtData::UpdateLastTargetCrd()
 			this->LastTargetCrd = CoordStruct::Empty;
 			pTimer->Stop();
 		}
+	}
+}
+
+void TechnoExt::ExtData::TransferPassengersToSpawn()
+{
+	auto const pThis = this->OwnerObject();
+	auto const pTypeExt = this->TypeExtData;
+
+	if (!pTypeExt->TransferPassengersToSpawnee)
+		return;
+
+	auto const pManager = pThis->SpawnManager;
+	if (!pManager)
+		return;
+
+	for (auto pItem : pManager->SpawnedNodes)
+	{
+		if (!pItem || !pItem->Unit)
+			continue;
+
+		const auto itemStatus = pItem->Status;
+		const bool canReceive = (itemStatus == SpawnNodeStatus::Idle || itemStatus == SpawnNodeStatus::Reloading);
+
+		// 仅当节点可接收乘客且母体还有乘客时才尝试转移
+		if (!canReceive || pThis->Passengers.NumPassengers <= 0)
+			continue;
+
+		// 找到母体的最后一个乘客
+		FootClass* pPassenger = pThis->Passengers.GetFirstPassenger();
+		FootClass* pLastPassenger = nullptr;
+		while (pPassenger && pPassenger->NextObject)
+		{
+			pLastPassenger = pPassenger;
+			pPassenger = static_cast<FootClass*>(pPassenger->NextObject);
+		}
+
+		if (!pPassenger)
+			continue;
+
+		auto const pItemType = pItem->Unit->GetTechnoType();
+		auto const pPassengerType = pPassenger->GetTechnoType();
+
+		// 检查尺寸限制
+		const int passengerSize = pPassengerType->Size;
+		const int availableSize = pItemType->Passengers - pItem->Unit->Passengers.GetTotalSize();
+		if (passengerSize > availableSize || passengerSize > pItemType->SizeLimit)
+			continue;
+
+		// 从母体移除该乘客
+		if (pLastPassenger)
+			pLastPassenger->NextObject = nullptr;
+		else
+			pThis->Passengers.FirstPassenger = nullptr;
+		--pThis->Passengers.NumPassengers;
+
+		// 插入到子单位乘客列表末尾
+		FootClass* pItemPassenger = pItem->Unit->Passengers.GetFirstPassenger();
+		FootClass* pLastItemPassenger = nullptr;
+		while (pItemPassenger)
+		{
+			pLastItemPassenger = pItemPassenger;
+			pItemPassenger = static_cast<FootClass*>(pItemPassenger->NextObject);
+		}
+
+		if (pLastItemPassenger)
+			pLastItemPassenger->NextObject = pPassenger;
+		else
+			pItem->Unit->Passengers.FirstPassenger = pPassenger;
+		++pItem->Unit->Passengers.NumPassengers;
+
+		pPassenger->NextObject = nullptr;
+		pPassenger->ForceMission(Mission::Stop);
+		pPassenger->Guard();
 	}
 }

@@ -218,6 +218,8 @@ public:
 
 		void AmmoAutoConvertActions();
 		void UpdateLastTargetCrd();
+
+		void TransferPassengersToSpawn();
 		int GetSight();
 
 		virtual ~ExtData() override;

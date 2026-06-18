@@ -516,6 +516,8 @@ public:
 
 		Nullable<AnimTypeClass*> LandingAnim;
 
+		Valueable<bool> TransferPassengersToSpawnee;
+
 		ExtData(TechnoTypeClass* OwnerObject) : Extension<TechnoTypeClass>(OwnerObject)
 			, HealthBar_Hide { false }
 			, HealthBar_HidePips { false }
@@ -984,6 +986,8 @@ public:
 			, FlyNoWobbles {}
 
 			, LandingAnim {}
+
+			, TransferPassengersToSpawnee { false }
 		{ }
 
 		virtual ~ExtData() = default;

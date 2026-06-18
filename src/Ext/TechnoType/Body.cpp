@@ -1203,6 +1203,8 @@ void TechnoTypeExt::ExtData::LoadFromINIFile(CCINIClass* const pINI)
 
 	this->LandingAnim.Read(exINI, pSection, "LandingAnim");
 
+	this->TransferPassengersToSpawnee.Read(exINI, pSection, "TransferPassengersToSpawnee");
+
 	// Ares 0.2
 	this->RadarJamRadius.Read(exINI, pSection, "RadarJamRadius");
 
@@ -1949,6 +1951,8 @@ void TechnoTypeExt::ExtData::Serialize(T& Stm)
 		.Process(this->FlyNoWobbles)
 
 		.Process(this->LandingAnim)
+
+		.Process(this->TransferPassengersToSpawnee)
 		;
 }
 void TechnoTypeExt::ExtData::LoadFromStream(PhobosStreamReader& Stm)
